@@ -239,24 +239,4 @@ bool ArrayList<T>::operator!=(const ArrayList &rhs) const {
 }
 
 
-template<class T>
-std::ostream& operator<<(std::ostream &os, const ArrayList<T> &list) {
-    os << "[";
-
-    typename ArrayList<T>::position pos;
-    pos = list.begin();
-
-    while(!list.end(pos)){
-        if ( pos != list.size())
-            os << list.get(pos) << ", ";
-        else
-            os << list.get(pos);
-        pos = list.next(pos);
-    }
-
-    os << "]" << "; (length: "<< list.size() <<")";
-    os << std::endl;
-
-    return os;
-}
 #endif //STRUTTURE_ASD_ARRAYLIST_H

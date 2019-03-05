@@ -5,6 +5,8 @@
 #ifndef STRUTTURE_ASD_LIST_H
 #define STRUTTURE_ASD_LIST_H
 
+#include <ostream>
+
 template <class T, class P>
 class List {
 
@@ -26,9 +28,27 @@ public:
     virtual position previous(position) const =0; // return the previous position
     virtual position next(position) const =0; // returns the next position
 
-
-
 };
 
+template< class T, class P >
+std::ostream& operator<<(std::ostream& os, const List<T,P> &list){
+    os << "[";
+
+    typename List<T,P>::position pos;
+    pos = list.begin();
+
+    while(!list.end(pos)){
+        if(pos != list.begin())
+            os <<  ", " << list.get(pos);
+        else
+            os << list.get(pos);
+        pos = list.next(pos);
+    }
+
+    os << "]" << "; (length: "<< list.size() <<")";
+    os << std::endl;
+
+    return os;
+}
 
 #endif //STRUTTURE_ASD_LIST_H
