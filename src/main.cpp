@@ -6,6 +6,7 @@
 #include <iostream>
 #include "List/ArrayList.h"
 #include "List/LinkedList.h"
+#include "Stack/Stack.h"
 using std::cout;
 using std::endl;
 
@@ -107,9 +108,52 @@ int test_LinkedList(){
     return 0;
 }
 
+
+int test_Stack(){
+    Stack<int> stk1;
+    stk1.push(1);
+    stk1.push(2);
+    stk1.push(3);
+    stk1.push(4);
+    stk1.push(5);
+    cout << std::boolalpha << "Stack#1 is empty?: " << stk1.is_empty() << endl;
+    cout << "Stack#1 size: " << stk1.size() << endl;
+
+    cout << "Stack#1 top: " << stk1.top() << endl;
+    stk1.pop();
+    cout << "Stack#1 top: " << stk1.top() << endl;
+    stk1.pop();
+    cout << "Stack#1 top: " << stk1.top() << endl;
+
+    Stack<int> stk2(stk1);
+    stk1.pop();
+    cout << "Stack#1 top: " << stk1.top() << endl;
+    stk1.pop();
+    cout << "Stack#1 top: " << stk1.top() << endl;
+    stk1.pop();
+    cout << std::boolalpha << "Stack#1 is empty?: " << stk1.is_empty() << endl;
+    cout << "Stack#1 size: " << stk1.size() << endl;
+
+    cout << stk2;
+    cout << "Stack#2 top:" << stk2.top() << endl;
+    stk2.pop();
+    cout << "Stack#2 top:" << stk2.top() << endl;
+    cout << stk2;
+    stk2.pop();
+    cout << "Stack#2 top:" << stk2.top() << endl;
+    cout << stk2;
+    stk2.pop();
+    cout << "Stack#2 top:" << stk2.top() << endl;
+    cout << stk2;
+
+
+
+
+}
 int main(){
     //test_ArrayList();
-    test_LinkedList();
+    //test_LinkedList();
+    test_Stack();
 
     return 0;
 }
