@@ -33,7 +33,7 @@ private:
 /*******************************************************************
 LINKED LIST
 *******************************************************************/
-
+// TODO: add other constructors; destructors and remove methods; assignment and equality operators;
 template<class T>
 class LinkedList: public List<T, Node<T>*> {
 public:
@@ -41,26 +41,31 @@ public:
     typedef typename List<T, Node<T>*>::position position;
 
     LinkedList();
-    LinkedList(const unsigned int size, const int step);
+    LinkedList(const T& val, const unsigned int length);
     LinkedList(const LinkedList<T>& list);
+    ~LinkedList();
 
     void create() override;
-
     bool is_empty() const override;
+
     unsigned int size() const override;
 
     value_type get(position position) const override;
     void add(const value_type &v, position pos) override;
-    void update(const value_type &v, position pos) override;
-    void remove(position pos) override;
-
     void pushBack(const value_type& v);
     void pushFront(const value_type& v);
 
+    void update(const value_type &v, position pos) override;
+    void remove(position pos) override;
+    void popBack();
+    void popFront();
+
+    void clear();
     position begin() const override;
     position last() const;
     bool end(position pos) const override;
     position previous(position pos) const override;
+
     position next(position pos) const override;
 
 private:
@@ -78,8 +83,8 @@ LinkedList<T>::LinkedList() {
     _length = 0;
 }
 
-template <class T>
-LinkedList<T>::LinkedList(const unsigned int size, const int step) {
+template<class T>
+LinkedList<T>::LinkedList(const T &val, const unsigned int length) {
 
 }
 
@@ -139,6 +144,24 @@ void LinkedList<T>::update(const value_type &v, position pos) {
 
 template<class T>
 void LinkedList<T>::remove(position pos) {
+    if( !is_empty() && !end(pos)){
+        pos->_prev->_next = pos->_next;
+        pos->_next->_prev = pos->_prev;
+
+        delete pos;
+        _length--;
+    }
+}
+
+template<class T>
+void LinkedList<T>::popBack() {
+    remove(last());
+
+}
+
+template<class T>
+void LinkedList<T>::popFront() {
+    remove(begin());
 
 }
 
@@ -165,6 +188,19 @@ typename LinkedList<T>::position LinkedList<T>::previous(position  pos) const {
 template<class T>
 typename LinkedList<T>::position LinkedList<T>::next(position pos) const {
     return pos->_next;
+}
+
+template<class T>
+void LinkedList<T>::clear() {
+    while(!is_empty())
+        remove(begin());
+}
+
+template<class T>
+LinkedList<T>::~LinkedList() {
+    clear();
+    delete _head;
+
 }
 
 
