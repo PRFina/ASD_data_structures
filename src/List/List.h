@@ -46,7 +46,6 @@ std::ostream& operator<<(std::ostream& os, const List<T,P> &list){
     }
 
     os << "]" << "; (length: "<< list.size() <<")";
-    os << std::endl;
 
     return os;
 }

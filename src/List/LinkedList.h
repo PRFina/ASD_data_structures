@@ -41,7 +41,7 @@ public:
     typedef typename List<T, Node<T>*>::position position;
 
     LinkedList();
-    LinkedList(const T& val, const unsigned int length);
+    LinkedList(const T& val, unsigned int length);
     LinkedList(const LinkedList<T>& list);
     ~LinkedList();
 
@@ -65,8 +65,11 @@ public:
     position last() const;
     bool end(position pos) const override;
     position previous(position pos) const override;
-
     position next(position pos) const override;
+
+    LinkedList<T>& operator=(const LinkedList &rhs);
+    bool operator==(const LinkedList &rhs) const;
+    bool operator!=(const LinkedList &rhs) const;
 
 private:
     Node<T>* _head; //_head->_prev is the last element, _head->_next it he first element
@@ -216,6 +219,40 @@ LinkedList<T>::~LinkedList() {
     clear();
     delete _head;
 
+}
+
+template<class T>
+LinkedList<T>& LinkedList<T>::operator=(const LinkedList &rhs) {
+    if (this != &rhs){
+        clear();
+        position  pos_rhs = rhs.begin();
+        while(!rhs.end(pos_rhs)){
+            pushBack(rhs.get(pos_rhs));
+            pos_rhs = rhs.next(pos_rhs);
+        }
+    }
+
+}
+
+template<class T>
+bool LinkedList<T>::operator==(const LinkedList &rhs) const {
+
+    if (_length != rhs._length)
+        return false;
+
+    position pos = begin(), pos_rhs = rhs.begin();
+    while (!end(pos)){
+        if(get(pos) != rhs.get(pos_rhs))
+            return false;
+        pos = next(pos);
+        pos_rhs = next(pos_rhs);
+    }
+    return true;
+}
+
+template<class T>
+bool LinkedList<T>::operator!=(const LinkedList &rhs) const {
+    return !(rhs == *this);
 }
 
 
