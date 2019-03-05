@@ -33,7 +33,7 @@ private:
 /*******************************************************************
 LINKED LIST
 *******************************************************************/
-// TODO: add other constructors; destructors and remove methods; assignment and equality operators;
+// TODO: assignment and equality operators;
 template<class T>
 class LinkedList: public List<T, Node<T>*> {
 public:
@@ -85,12 +85,27 @@ LinkedList<T>::LinkedList() {
 
 template<class T>
 LinkedList<T>::LinkedList(const T &val, const unsigned int length) {
+    _head = new Node<T>;
+    _head->_prev = _head;
+    _head->_next =_head;
+    _length = 0;
 
+    for(int i=0; i < length; i++)
+        pushBack(val);
 }
 
 template <class T>
 LinkedList<T>::LinkedList(const LinkedList<T> &list) {
+    _head = new Node<T>;
+    _head->_prev = _head;
+    _head->_next =_head;
+    _length =0;
 
+    position pos = list.begin();
+    while (!list.end(pos)){
+        pushBack(list.get(pos));
+        pos = list.next(pos);
+    }
 }
 
 template<class T>
