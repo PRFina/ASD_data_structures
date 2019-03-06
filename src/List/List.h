@@ -7,6 +7,15 @@
 
 #include <ostream>
 
+/**
+ * This class models a list Abstract Data Type. A list is a linear sequence with
+ * an order relation defined on its elements.
+ *
+ * This class is an abstract class to provide an unified and consistent interface to client code.
+ *
+ * @tparam T type of the values contained in the list.
+ * @tparam P type of the position used to scan and access the list.
+ */
 template <class T, class P>
 class List {
 
@@ -14,19 +23,65 @@ public:
     typedef  T value_type;
     typedef  P position;
 
-    virtual void create() =0;
+    /**
+     * Get the k-th element in the specified position
+     * @param pos position of the k-th element to retrieve
+     * @return the k-th element
+     */
+    virtual value_type get(position pos) const =0;
+    /**
+     * Add an element to the list in the specified position.
+     * All elements after the position will be shifted to the right
+     * @param val element to add
+     * @param pos position in which insert the element
+     */
+    virtual void add(const value_type& val, position pos) =0;
+    /**
+      * Update the value of the element in the specified position.
+      * @param val value of the element to update
+      * @param pos position in which insert the element
+      */
+    virtual void update(const value_type& v, position pos) =0;
+    /**
+     * Remove an element from the list in the specified position.
+     * All elements after the position will be shifted to the left
+     * @param pos position of the element to remove
+     */
+    virtual void remove(position pos) =0;
+    /**
+     *
+     * @return position of the first element of the list
+     */
+    virtual position begin() const =0;
+    /**
+     * Check if the given position is the end of the list.
+     * Note that list's end position isn't the same of the list's last element position.
+     * @param
+     * @return true if pos is the end of the list, false otherwise.
+     */
+    virtual bool end(position pos) const =0;
+    /**
+     *
+     * @param pos of the element
+     * @return the position of the previous element at position pos
+     */
+    virtual position previous(position pos) const =0;
+    /**
+     *
+     * @param pos of the element
+     * @return the position of the previous element at position pos
+     */
+    virtual position next(position pos) const =0; // returns the next position
+    /**
+     * Check if list have no elements
+     * @return true if list is empty, false otherwise
+     */
     virtual bool is_empty() const =0; // true if the list's size is 0
+    /**
+     * Get the number of elements in the list, that is the list's length
+     * @return the length of the list
+     */
     virtual unsigned int size() const =0; // true if the list's size is 0
-
-    virtual value_type get(position) const =0;
-    virtual void add(const value_type& v, position pos) =0; // insert an element
-    virtual void update(const value_type& v, position pos) =0; // insert an element
-    virtual void remove(position pos) =0; // delete the element at position pos
-
-    virtual position begin() const =0;  // returns a position pointing to the beginning of the list
-    virtual bool end(position) const =0; // returns a position pointing to the end of the list
-    virtual position previous(position) const =0; // return the previous position
-    virtual position next(position) const =0; // returns the next position
 
 };
 
