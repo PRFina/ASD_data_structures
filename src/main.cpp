@@ -7,6 +7,9 @@
 #include "List/ArrayList.h"
 #include "List/LinkedList.h"
 #include "Stack/Stack.h"
+#include "Queue/Queue.h"
+#include "assert.h"
+
 using std::cout;
 using std::endl;
 
@@ -150,10 +153,49 @@ int test_Stack(){
 
 
 }
+
+int test_Queue(){
+
+    Queue<int> que1;
+    que1.push(10);
+    que1.push(20);
+    que1.push(30);
+    que1.push(40);
+    cout << que1 << endl;
+
+    cout << "Queue#1 is empty?: " << std::boolalpha << que1.is_empty() << endl; // -> false
+    cout << "Queue#1 size: " << que1.size() << endl; // -> 4
+
+    cout << "Queue#1 back: "<< que1.back() << endl; // -> 40
+    cout << "Queue#1 front: "<< que1.front() << endl; // -> 10
+
+    que1.pop();
+    cout << que1 << endl;
+    cout << "Queue#1 back: "<< que1.back() << endl; // -> 40
+    cout << "Queue#1 front: "<< que1.front() << endl; // -> 20
+
+    cout << "Queue#1 size: " << que1.size() << endl; // -> 3
+
+    que1.pop();
+    que1.pop();
+    que1.pop();
+    cout << que1 << endl;
+    cout << "Queue#1 is empty?: " << std::boolalpha << que1.is_empty() << endl; // -> true
+    cout << "Queue#1 size: " << que1.size() << endl; // -> 0
+
+
+    return 0;
+}
+
+
 int main(){
     //test_ArrayList();
     //test_LinkedList();
-    test_Stack();
+    //test_Stack();
+    test_Queue();
+
+
+
 
     return 0;
 }
