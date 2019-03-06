@@ -13,8 +13,12 @@
 using std::cout;
 using std::endl;
 
+void print_title(std::string test_title){
+    cout << endl << endl << "******************* " << test_title << " *******************" << endl << endl;
+}
+
 int test_ArrayList(){
-    // TODO: add complete test suite
+    print_title("TEST ARRAY LIST");
     ArrayList<int> lst(3);
     lst.add(1,1);
     lst.add(2,2);
@@ -44,7 +48,7 @@ int test_ArrayList(){
 
 
 int test_LinkedList(){
-
+    print_title("TEST LINKED LIST");
     LinkedList<int> lst;
     lst.pushFront(1000);
     lst.pushFront(200);
@@ -113,6 +117,8 @@ int test_LinkedList(){
 
 
 int test_Stack(){
+    print_title("TEST STACK");
+
     Stack<int> stk1;
     stk1.push(1);
     stk1.push(2);
@@ -155,7 +161,7 @@ int test_Stack(){
 }
 
 int test_Queue(){
-
+    print_title("TEST QUEUE");
     Queue<int> que1;
     que1.push(10);
     que1.push(20);
@@ -189,9 +195,9 @@ int test_Queue(){
 
 
 int main(){
-    //test_ArrayList();
-    //test_LinkedList();
-    //test_Stack();
+    test_ArrayList();
+    test_LinkedList();
+    test_Stack();
     test_Queue();
 
 
