@@ -9,30 +9,34 @@
 
 template <class T, class N>
 class BinTree {
-
+public:
     typedef T value_type;
     typedef N Node;
 
     enum VisitType {PRE, POST, IN, LEVEL};
 
-    virtual Node add_root(Node n) =0;
-    virtual Node add_left_child(Node n) =0;
-    virtual Node add_right_child(Node n) =0;
+    virtual void add_root(value_type val) =0;
+    virtual void add_left_child(Node n) =0;
+    virtual void add_left_child(value_type val, Node n) =0;
+    virtual void add_right_child(Node n) =0;
+    virtual void add_right_child(value_type val, Node n) =0;
 
     virtual Node get_root() =0;
-    virtual Node get_parent() =0;
-    virtual Node get_left_child() =0;
-    virtual Node get_right_root() =0;
+    virtual Node get_parent(Node n) =0;
+    virtual Node get_left_child(Node n) =0;
+    virtual Node get_right_child(Node n) =0;
 
     virtual value_type get(Node n) =0;
-    virtual value_type update(value_type val, Node n) =0;
-    virtual value_type get(Node n) =0;
+    virtual void update(value_type val, Node n) =0;
+
+    virtual void remove(Node n) =0;
 
     virtual bool is_empty() =0;
     virtual bool left_child_empty(Node n) =0;
     virtual bool right_child_empty(Node n) =0;
 
 };
+//TODO: review implementation
 template <class T, class N>
 void pre_visit(typename BinTree<T,N>::Node n) {
     std::cout << get(n);
