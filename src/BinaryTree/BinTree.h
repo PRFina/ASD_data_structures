@@ -35,33 +35,10 @@ public:
     virtual bool left_child_empty(Node n) =0;
     virtual bool right_child_empty(Node n) =0;
 
+    virtual void pre_visit(Node n) =0;
+    virtual void in_visit(Node n) =0;
+    virtual void post_visit(Node n) =0;
+
 };
-//TODO: review implementation
-template <class T, class N>
-void pre_visit(typename BinTree<T,N>::Node n) {
-    std::cout << get(n);
-    pre_visit(get_left_child(n));
-    pre_visit(get_right_child(n));
-
-}
-template <class T, class N>
-void in_visit(typename BinTree<T,N>::Node n) {
-    pre_visit(get_left_child(n));
-    std::cout << get(n);
-    pre_visit(get_right_child(n));
-
-}
-template <class T, class N>
-void post_visit(typename BinTree<T,N>::Node n) {
-    pre_visit(get_left_child(n));
-    pre_visit(get_right_child(n));
-    std::cout << get(n);
-
-}
-//TODO: use queue to implement level order visit
-template <class T, class N>
-void level_visit(typename BinTree<T,N>::Node n) {
-
-}
 
 #endif //STRUTTURE_ASD_BINTREE_H

@@ -16,7 +16,7 @@ public:
     static const int NIL = -1;
     typedef typename BinTree<T, int>::value_type value_type;
     typedef typename BinTree<T, int>::Node Node;
-    //TODO: make constructor copy, assignement and equality operators
+    //TODO: make constructor copy, assignment and equality operators
     ArrayBinTree();
     ArrayBinTree(size_t size);
     ~ArrayBinTree();
@@ -41,6 +41,10 @@ public:
 
     void update(value_type val, Node n) override;
     void remove(Node n) override;
+
+    void pre_visit(Node n);
+    void in_visit(Node n);
+    void post_visit(Node n);
 
 
 
@@ -297,6 +301,35 @@ template<class T>
 ArrayBinTree<T>::~ArrayBinTree() {
     remove(_root); //remove
     delete[] _data;
+}
+
+//TODO: review implementation
+template<class T>
+void ArrayBinTree<T>::pre_visit(Node n) {
+
+    if (n != NIL){
+        std::cout << get(n) << ", ";
+        pre_visit(get_left_child(n));
+        pre_visit(get_right_child(n));
+    }
+}
+
+template<class T>
+void ArrayBinTree<T>::in_visit(Node n) {
+    if (n != NIL){
+        in_visit(get_left_child(n));
+        std::cout << get(n) << ", ";
+        in_visit(get_right_child(n));
+    }
+}
+
+template<class T>
+void ArrayBinTree<T>::post_visit(Node n) {
+    if (n != NIL){
+        post_visit(get_left_child(n));
+        post_visit(get_right_child(n));
+        std::cout << get(n) << ", ";
+    }
 }
 
 #endif //STRUTTURE_ASD_ARRAYBINTREE_H
