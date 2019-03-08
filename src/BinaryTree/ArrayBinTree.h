@@ -12,12 +12,14 @@
 
 template <class T>
 class ArrayBinTree: public BinTree<T, int> {
-    static const int NIL = -1;
 public:
+    static const int NIL = -1;
     typedef typename BinTree<T, int>::value_type value_type;
     typedef typename BinTree<T, int>::Node Node;
-
+    //TODO: make constructor copy, assignement and equality operators
     ArrayBinTree();
+    ArrayBinTree(size_t size);
+    ~ArrayBinTree();
     void print();
 
     void add_root(value_type val) override;
@@ -38,6 +40,9 @@ public:
     value_type get(Node n) override;
 
     void update(value_type val, Node n) override;
+    void remove(Node n) override;
+
+
 
 private:
     struct _Cell {
@@ -213,7 +218,7 @@ typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_left_child(Node n) {
     if ( !left_child_empty(n))
         return _data[n].left;
     else
-        return n;
+        return NIL;
 }
 
 template<class T>
@@ -221,19 +226,19 @@ typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_right_child(Node n) {
     if ( !right_child_empty(n))
         return _data[n].right;
     else
-        return n;
+        return NIL;
 }
 
 template<class T>
 bool ArrayBinTree<T>::right_child_empty(ArrayBinTree<T>::Node n) {
-    return (_data[n].left == NIL);
+    return (_data[n].right == NIL);
 }
 
 template<class T>
 void ArrayBinTree<T>::add_root(value_type val) {
     if (is_empty() && _root == NIL){
         _root = _free_pos;
-        _free_pos = _data[_free_pos].left;
+        _free_pos = _data[_free_pos].left; // new child will be inserted always as left child first
 
         _data[_root].value = val;
         _data[_root].left = NIL;
@@ -244,15 +249,11 @@ void ArrayBinTree<T>::add_root(value_type val) {
 
 }
 
-
-
-#endif //STRUTTURE_ASD_ARRAYBINTREE_H
-
 template<class T>
 void ArrayBinTree<T>::print() {
-    for (int i = 0; i < _MAX_SIZE ; ++i) {
+    for (int i = 0; i < _size ; ++i) {
         std::cout << "array pos: " << i << "   (" << _data[i].value << ", " << _data[i].parent << ", "
-        << _data[i].left << ", " << _data[i].right << ")" << std::endl;
+                  << _data[i].left << ", " << _data[i].right << ")" << std::endl;
     }
 
 }
@@ -261,3 +262,43 @@ template<class T>
 bool ArrayBinTree<T>::isFull() {
     return(_size == _MAX_SIZE);
 }
+
+template<class T>
+void ArrayBinTree<T>::remove(Node n) {
+
+    if (n != NIL){
+
+        if (!left_child_empty(n))
+            remove(_data[n].left); // remove left subtree rooted ad n
+
+        if (!right_child_empty(n))
+        remove(_data[n].right); // remove right subtree rooted ad n
+
+        if ( n != _root) {
+            Node parent = get_parent(n);
+            if (_data[parent].left == n) // check if the node is a left child of the parent
+                _data[parent].left = NIL; // "delete the node setting it to NIL"
+            else
+                _data[parent].right = NIL;
+        }
+        else
+            _root = NIL; // delete the root
+
+        _size--;
+        _data[n].left = _free_pos;
+        _free_pos = n; // set the next free position to the deleted node
+        n = NIL;
+    }
+    else
+        throw std::domain_error("Null node");
+}
+
+template<class T>
+ArrayBinTree<T>::~ArrayBinTree() {
+    remove(_root); //remove
+    delete[] _data;
+}
+
+#endif //STRUTTURE_ASD_ARRAYBINTREE_H
+
+
