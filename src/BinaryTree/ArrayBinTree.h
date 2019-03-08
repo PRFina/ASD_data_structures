@@ -28,25 +28,19 @@ public:
     void add_right_child(Node n) override;
     void add_right_child(value_type val, Node n);
 
-    bool is_empty() override;
-    bool left_child_empty(Node n) override;
-
-    bool right_child_empty(Node n) override;
     Node get_root() override;
     Node get_parent(Node n) override;
     Node get_left_child(Node n) override;
     Node get_right_child(Node n) override;
-
     value_type get(Node n) override;
+
+    bool is_empty() override;
+    bool left_child_empty(Node n) override;
+    bool right_child_empty(Node n) override;
+    bool is_valid(Node n);
 
     void update(value_type val, Node n) override;
     void remove(Node n) override;
-
-    void pre_visit(Node n);
-    void in_visit(Node n);
-    void post_visit(Node n);
-
-
 
 private:
     struct _Cell {
@@ -95,7 +89,7 @@ void ArrayBinTree<T>::add_left_child(Node n) {
         throw std::domain_error("Empty Tree");
     if (isFull())
         throw std::domain_error("Tree is full");
-    if (n == NIL)
+    if (!is_valid(n))
         throw std::domain_error("Null Node");
     if (_data[n].left != NIL)
         throw std::domain_error("Node already exists");
@@ -120,7 +114,7 @@ void ArrayBinTree<T>::add_left_child(value_type val, Node n) {
         throw std::domain_error("Empty Tree");
     if (isFull())
         throw std::domain_error("Tree is full");
-    if (n == NIL)
+    if (!is_valid(n))
         throw std::domain_error("Null Node");
     if (_data[n].left != NIL)
         throw std::domain_error("Node already exists");
@@ -145,7 +139,7 @@ void ArrayBinTree<T>::add_right_child(Node n) {
         throw std::domain_error("Empty Tree");
     if (isFull())
         throw std::domain_error("Tree is full");
-    if (n == NIL)
+    if (!is_valid(n))
         throw std::domain_error("Null Node");
     if (_data[n].right != NIL)
         throw std::domain_error("Node already exists");
@@ -170,7 +164,7 @@ void ArrayBinTree<T>::add_right_child(value_type val, ArrayBinTree::Node n) {
         throw std::domain_error("Empty Tree");
     if (isFull())
         throw std::domain_error("Tree is full");
-    if (n == NIL)
+    if (!is_valid(n))
         throw std::domain_error("Null Node");
     if (_data[n].right != NIL)
         throw std::domain_error("Node already exists");
@@ -303,33 +297,11 @@ ArrayBinTree<T>::~ArrayBinTree() {
     delete[] _data;
 }
 
-//TODO: review implementation
-template<class T>
-void ArrayBinTree<T>::pre_visit(Node n) {
 
-    if (n != NIL){
-        std::cout << get(n) << ", ";
-        pre_visit(get_left_child(n));
-        pre_visit(get_right_child(n));
-    }
-}
 
 template<class T>
-void ArrayBinTree<T>::in_visit(Node n) {
-    if (n != NIL){
-        in_visit(get_left_child(n));
-        std::cout << get(n) << ", ";
-        in_visit(get_right_child(n));
-    }
-}
-
-template<class T>
-void ArrayBinTree<T>::post_visit(Node n) {
-    if (n != NIL){
-        post_visit(get_left_child(n));
-        post_visit(get_right_child(n));
-        std::cout << get(n) << ", ";
-    }
+bool ArrayBinTree<T>::is_valid(Node n) {
+    return (n != NIL);
 }
 
 #endif //STRUTTURE_ASD_ARRAYBINTREE_H
