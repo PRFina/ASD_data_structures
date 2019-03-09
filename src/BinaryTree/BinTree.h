@@ -6,6 +6,7 @@
 #define STRUTTURE_ASD_BINTREE_H
 
 #include <iostream>
+#include "../Queue/Queue.h"
 /**
  * there a 2 caterogry of methods:
  * 1) Tree methods: works globally on tree
@@ -47,6 +48,7 @@ public:
     virtual void pre_visit(Node n);
     virtual void in_visit(Node n);
     virtual void post_visit(Node n);
+    virtual void level_visit(Node n);
 
     virtual int get_depth(Node n);
     virtual int get_height(Node n);
@@ -101,6 +103,24 @@ int BinTree<T, N>::get_height(Node n) {
     }
     else
         return -1; // recursion base case
+}
+
+template<class T, class N>
+void BinTree<T, N>::level_visit(Node n) {
+    Queue<N> queue;
+    queue.push(n);
+    N node;
+    while (!queue.is_empty()){
+        node = queue.front();
+        std::cout << get(node) << ", ";
+        queue.pop();
+
+        if(!left_child_empty(node))
+            queue.push(get_left_child(node));
+        if(!right_child_empty(node))
+            queue.push(get_right_child(node));
+    }
+
 }
 
 #endif //STRUTTURE_ASD_BINTREE_H
