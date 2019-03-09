@@ -16,9 +16,9 @@ public:
     static const int NIL = -1;
     typedef typename BinTree<T, int>::value_type value_type;
     typedef typename BinTree<T, int>::Node Node;
-    //TODO: make constructor copy, assignment and equality operators
-    ArrayBinTree();
-    ArrayBinTree(size_t size);
+
+    ArrayBinTree(size_t size=100);
+    ArrayBinTree(const ArrayBinTree& tree);
     ~ArrayBinTree();
     void print();
 
@@ -41,6 +41,11 @@ public:
 
     void update(value_type val, Node n) override;
     void remove(Node n) override;
+    //TODO: equality operators implementation
+    ArrayBinTree& operator=(const ArrayBinTree &rhs) const;
+    bool operator==(const ArrayBinTree &rhs) const;
+
+    bool operator!=(const ArrayBinTree &rhs) const;
 
 private:
     struct _Cell {
@@ -63,8 +68,8 @@ private:
 };
 
 template<class T>
-ArrayBinTree<T>::ArrayBinTree() {
-    _MAX_SIZE = 100;
+ArrayBinTree<T>::ArrayBinTree(size_t size) {
+    _MAX_SIZE = size;
     _data = new _Cell[_MAX_SIZE];
     _size = 0;
     _root = NIL;
@@ -74,6 +79,20 @@ ArrayBinTree<T>::ArrayBinTree() {
         _data[i].left = (i+1) % _MAX_SIZE;
     }
 
+}
+
+template<class T>
+ArrayBinTree<T>::ArrayBinTree(const ArrayBinTree &tree) {
+    _MAX_SIZE =tree._MAX_SIZE;
+    _size = tree._size;
+    _root = tree._root;
+    _free_pos = tree._free_pos;
+
+    _data = new _Cell[_MAX_SIZE];
+
+    for (int i = 0; i < _MAX_SIZE; i++) {
+        _data[i] = tree._data[i];
+    }
 }
 
 template<class T>
@@ -303,6 +322,40 @@ template<class T>
 bool ArrayBinTree<T>::is_valid(Node n) {
     return (n != NIL);
 }
+
+template<class T>
+bool ArrayBinTree<T>::operator==(const ArrayBinTree &rhs) const {
+    if (this == &rhs)
+        return true;
+
+}
+
+template<class T>
+bool ArrayBinTree<T>::operator!=(const ArrayBinTree &rhs) const {
+    return !(rhs == *this);
+}
+
+template<class T>
+ArrayBinTree<T>& ArrayBinTree<T>::operator=(const ArrayBinTree &rhs) const {
+    if(this != &rhs){
+        _MAX_SIZE =rhs._MAX_SIZE;
+        _size = rhs._size;
+        _root = rhs._root;
+        _free_pos = rhs._free_pos;
+
+        delete[] _data;
+        _data = new _Cell[_MAX_SIZE];
+
+        for (int i = 0; i < _MAX_SIZE; i++) {
+            _data[i] = rhs._data[i];
+        }
+
+
+    }
+
+    return *this;
+}
+
 
 #endif //STRUTTURE_ASD_ARRAYBINTREE_H
 
