@@ -42,10 +42,12 @@ public:
     void update(value_type val, Node n) override;
     void remove(Node n) override;
     //TODO: equality operators implementation
-    ArrayBinTree& operator=(const ArrayBinTree &rhs) const;
+    ArrayBinTree& operator=(const ArrayBinTree &rhs);
     bool operator==(const ArrayBinTree &rhs) const;
 
     bool operator!=(const ArrayBinTree &rhs) const;
+
+    bool is_leaf(Node n) override;
 
 private:
     struct _Cell {
@@ -336,7 +338,7 @@ bool ArrayBinTree<T>::operator!=(const ArrayBinTree &rhs) const {
 }
 
 template<class T>
-ArrayBinTree<T>& ArrayBinTree<T>::operator=(const ArrayBinTree &rhs) const {
+ArrayBinTree<T>& ArrayBinTree<T>::operator=(const ArrayBinTree &rhs) {
     if(this != &rhs){
         _MAX_SIZE =rhs._MAX_SIZE;
         _size = rhs._size;
@@ -349,11 +351,14 @@ ArrayBinTree<T>& ArrayBinTree<T>::operator=(const ArrayBinTree &rhs) const {
         for (int i = 0; i < _MAX_SIZE; i++) {
             _data[i] = rhs._data[i];
         }
-
-
     }
 
     return *this;
+}
+
+template<class T>
+bool ArrayBinTree<T>::is_leaf(Node n) {
+    return (left_child_empty(n) && right_child_empty(n));
 }
 
 

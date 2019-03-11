@@ -44,6 +44,7 @@ public:
     virtual bool left_child_empty(Node n) =0;
     virtual bool right_child_empty(Node n) =0;
     virtual bool is_valid(Node n) =0;
+    virtual bool is_leaf(Node n) =0;
 
     virtual void pre_visit(Node n);
     virtual void in_visit(Node n);
