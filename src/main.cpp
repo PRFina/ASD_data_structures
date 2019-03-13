@@ -9,6 +9,8 @@
 #include "Stack/Stack.h"
 #include "Queue/Queue.h"
 #include "assert.h"
+#include "BinaryTree/ArrayBinTree.h"
+#include "BinaryTree/LinkedBinTree.h"
 
 using std::cout;
 using std::endl;
@@ -45,7 +47,6 @@ int test_ArrayList(){
 
     return 0;
 }
-
 
 int test_LinkedList(){
     print_title("TEST LINKED LIST");
@@ -114,7 +115,6 @@ int test_LinkedList(){
 
     return 0;
 }
-
 
 int test_Stack(){
     print_title("TEST STACK");
@@ -193,12 +193,151 @@ int test_Queue(){
     return 0;
 }
 
+int test_ArrayBinTree(){
+    print_title("TEST BINARY TREE WITH ARRAY");
+    typedef ArrayBinTree<int>::Node Node;
 
+    ArrayBinTree<int> tree1;
+    tree1.add_root(10000);
+
+    tree1.add_left_child(100, tree1.get_root());
+    tree1.add_right_child(-100, tree1.get_root());
+    Node n1 = tree1.get_left_child(tree1.get_root());
+    Node n2 = tree1.get_right_child(tree1.get_root());
+
+
+    tree1.add_left_child(500, n1);
+    Node n3 = tree1.get_left_child(n1);
+
+
+    tree1.add_left_child(800, n3);
+    tree1.add_right_child(-800, n3);
+    Node n4 = tree1.get_left_child(n3);
+    Node n5 = tree1.get_right_child(n3);
+
+    tree1.add_left_child(50, n2);
+
+    // Visit Tests
+    cout << "PREVISIT:" << endl;
+    tree1.pre_visit(tree1.get_root());
+    cout <<  endl;
+
+    cout << "INVISIT:" << endl;
+    tree1.in_visit(tree1.get_root());
+    cout <<  endl;
+
+    cout << "POSTVISIT:" << endl;
+    tree1.post_visit(tree1.get_root());
+    cout <<  endl;
+
+    cout << "BFSVISIT:" << endl;
+    tree1.level_visit(tree1.get_root());
+    cout <<  endl;
+
+    // Height Tests
+    cout << "Tree Height:" << endl;
+    cout <<  tree1.get_height(tree1.get_root()) << endl;
+
+    cout << "SubTree Height (right child of root):" << endl;
+    cout <<  tree1.get_height(tree1.get_right_child(tree1.get_root())) << endl;
+
+    cout << "SubTree Height rooted in a leaf node(left child of right child of root):" << endl;
+    cout <<  tree1.get_height(tree1.get_left_child(tree1.get_right_child(tree1.get_root()))) << endl;
+    cout << endl << endl;
+    // Depth Tests
+    cout << "Depth of root:" << endl;
+    cout <<  tree1.get_depth(tree1.get_root()) << endl;
+
+    cout << "Depth of right child of root:" << endl;
+    cout <<  tree1.get_depth(tree1.get_right_child(tree1.get_root())) << endl;
+
+    cout << "Sub Depth rooted in a lef node(left child of right child of root):" << endl;
+    cout <<  tree1.get_depth(tree1.get_left_child(tree1.get_right_child(tree1.get_root()))) << endl << endl;
+
+
+    cout << "Remove subtree roted in left child of root " << endl;
+    tree1.remove(n1);
+    tree1.add_left_child(2000,tree1.get_root());
+    tree1.add_right_child(-2000,n1);
+
+    cout << "PREVISIT:" << endl;
+    tree1.pre_visit(tree1.get_root());
+    cout <<  endl;
+
+    cout << "INVISIT:" << endl;
+    tree1.in_visit(tree1.get_root());
+    cout <<  endl;
+
+    cout << "POSTVISIT:" << endl;
+    tree1.post_visit(tree1.get_root());
+    cout <<  endl;
+
+    cout << "NEW TREE WITH COPY CONSTRUCTOR";
+    ArrayBinTree<int> tree2(tree1);
+
+    cout << "PREVISIT:" << endl;
+    tree2.pre_visit(tree2.get_root());
+    cout <<  endl;
+
+    tree2.add_left_child(666,tree2.get_left_child(tree2.get_root()));
+    cout << "PREVISIT:" << endl;
+    tree2.pre_visit(tree2.get_root());
+    cout <<  endl;
+
+    return 0;
+}
+
+int test_LinkedBinTree(){
+    LinkedBinTree<int> T1(1000);
+
+    T1.add_left_child(100,T1.get_root());
+    T1.add_right_child(-100,T1.get_root());
+
+    T1.add_left_child(500, T1.get_left_child(T1.get_root()));
+    T1.add_left_child(50,T1.get_right_child(T1.get_root()));
+
+    T1.add_left_child(800, T1.get_left_child(T1.get_left_child(T1.get_root())));
+    T1.add_right_child(-800, T1.get_left_child(T1.get_left_child(T1.get_root())));
+
+    cout << "T1 pre-order visit: ";
+    T1.pre_visit(T1.get_root());
+    cout << "T1 Height's: " << T1.get_height(T1.get_root()) << endl;
+
+
+
+    LinkedBinTree<int> T2(T1);
+    cout << "T2 (copied from T1) pre-order visit: ";
+    T2.pre_visit(T2.get_root());
+    cout << endl;
+
+
+
+
+    T1.remove(T1.get_root());
+    T1.add_root(8000);
+    cout << "T1 after removed all nodes and added an new root (only one node) pre-order visit: ";
+    T1.pre_visit(T1.get_root());
+    int h = T1.get_height(T1.get_root());
+    cout << "T1 Height's: " << h << endl;
+
+    cout << "T2 add as right child to right child of root the subtree "
+            "rooted in the left child of left child of root, resulted preorder visit:" << endl;
+
+    T2.add_right_subtree(T2.get_left_child(T2.get_left_child(T2.get_root())), T2.get_right_child(T2.get_root()));
+    T2.pre_visit(T2.get_root());
+
+    LinkedBinTree<int> T3 = T2.extract_subtree(T2.get_right_child(T2.get_root()));
+
+
+}
 int main(){
-    test_ArrayList();
-    test_LinkedList();
-    test_Stack();
-    test_Queue();
+    //test_ArrayList();
+    //test_LinkedList();
+    //test_Stack();
+    //test_Queue();
+    //test_ArrayBinTree();
+    test_LinkedBinTree();
+
 
 
 
