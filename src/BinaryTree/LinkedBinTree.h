@@ -47,7 +47,6 @@ public:
     void add_right_child(Node n) override;
     void add_right_child(value_type val, Node n) override;
 
-
     void add_left_subtree(Node from, Node to);
     void add_right_subtree(Node from, Node to);
 
@@ -58,7 +57,9 @@ public:
     value_type get(Node n) const override;
 
     void update(value_type val, Node n) override;
+
     void remove(Node n) override;
+    LinkedBinTree<T> extract_subtree(Node root);
 
     bool is_empty() const override;
     bool left_child_empty(Node n) const override;
@@ -302,4 +303,16 @@ void LinkedBinTree<T>::add_right_subtree(LinkedBinTree::Node from, LinkedBinTree
         throw NullNode();
 
 }
+
+template<class T>
+LinkedBinTree<T> LinkedBinTree<T>::extract_subtree(LinkedBinTree::Node root) {
+
+    LinkedBinTree<T> new_tree;
+    size_t size = 0;
+    new_tree._root = copy(root, nullptr, size);
+    new_tree._size = size;
+
+    return new_tree;
+}
+
 #endif //STRUTTURE_ASD_LINKEDBINTREE_H
