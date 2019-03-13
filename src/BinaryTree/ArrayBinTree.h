@@ -28,16 +28,16 @@ public:
     void add_right_child(Node n) override;
     void add_right_child(value_type val, Node n);
 
-    Node get_root() override;
-    Node get_parent(Node n) override;
-    Node get_left_child(Node n) override;
-    Node get_right_child(Node n) override;
-    value_type get(Node n) override;
+    Node get_root() const override;
+    Node get_parent(Node n) const override;
+    Node get_left_child(Node n) const override;
+    Node get_right_child(Node n) const override;
+    value_type get(Node n) const override;
 
-    bool is_empty() override;
-    bool left_child_empty(Node n) override;
-    bool right_child_empty(Node n) override;
-    bool is_valid(Node n);
+    bool is_empty() const override;
+    bool left_child_empty(Node n) const override;
+    bool right_child_empty(Node n) const override;
+    bool is_valid(Node n) const;
 
     void update(value_type val, Node n) override;
     void remove(Node n) override;
@@ -47,7 +47,7 @@ public:
 
     bool operator!=(const ArrayBinTree &rhs) const;
 
-    bool is_leaf(Node n) override;
+    bool is_leaf(Node n) const  override;
 
 private:
     struct _Cell {
@@ -98,7 +98,7 @@ ArrayBinTree<T>::ArrayBinTree(const ArrayBinTree &tree) {
 }
 
 template<class T>
-typename ArrayBinTree<T>::value_type ArrayBinTree<T>::get(Node n) {
+typename ArrayBinTree<T>::value_type ArrayBinTree<T>::get(Node n) const {
     if (n != NIL)
         return _data[n].value;
 }
@@ -210,22 +210,22 @@ void ArrayBinTree<T>::update(value_type val, Node n) {
 }
 
 template<class T>
-bool ArrayBinTree<T>::is_empty() {
+bool ArrayBinTree<T>::is_empty() const {
     return (_size == 0);
 }
 
 template<class T>
-bool ArrayBinTree<T>::left_child_empty(Node n) {
+bool ArrayBinTree<T>::left_child_empty(Node n) const {
     return (_data[n].left == NIL);
 }
 
 template<class T>
-typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_root() {
+typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_root() const {
     return _root;
 }
 
 template<class T>
-typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_parent(Node n) {
+typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_parent(Node n) const {
     if ( n != _root)
         return _data[n].parent;
     else
@@ -233,7 +233,7 @@ typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_parent(Node n) {
 }
 
 template<class T>
-typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_left_child(Node n) {
+typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_left_child(Node n) const {
     if ( !left_child_empty(n))
         return _data[n].left;
     else
@@ -241,7 +241,7 @@ typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_left_child(Node n) {
 }
 
 template<class T>
-typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_right_child(Node n) {
+typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_right_child(Node n) const {
     if ( !right_child_empty(n))
         return _data[n].right;
     else
@@ -249,7 +249,7 @@ typename ArrayBinTree<T>::Node ArrayBinTree<T>::get_right_child(Node n) {
 }
 
 template<class T>
-bool ArrayBinTree<T>::right_child_empty(ArrayBinTree<T>::Node n) {
+bool ArrayBinTree<T>::right_child_empty(ArrayBinTree<T>::Node n) const {
     return (_data[n].right == NIL);
 }
 
@@ -321,7 +321,7 @@ ArrayBinTree<T>::~ArrayBinTree() {
 
 
 template<class T>
-bool ArrayBinTree<T>::is_valid(Node n) {
+bool ArrayBinTree<T>::is_valid(Node n) const{
     return (n != NIL);
 }
 
@@ -357,7 +357,7 @@ ArrayBinTree<T>& ArrayBinTree<T>::operator=(const ArrayBinTree &rhs) {
 }
 
 template<class T>
-bool ArrayBinTree<T>::is_leaf(Node n) {
+bool ArrayBinTree<T>::is_leaf(Node n) const {
     return (left_child_empty(n) && right_child_empty(n));
 }
 

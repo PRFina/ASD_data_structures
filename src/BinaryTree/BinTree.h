@@ -30,21 +30,21 @@ public:
     virtual void add_right_child(Node n) =0;
     virtual void add_right_child(value_type val, Node n) =0;
 
-    virtual Node get_root() =0;
-    virtual Node get_parent(Node n) =0;
-    virtual Node get_left_child(Node n) =0;
-    virtual Node get_right_child(Node n) =0;
+    virtual Node get_root() const =0;
+    virtual Node get_parent(Node n) const =0;
+    virtual Node get_left_child(Node n) const =0;
+    virtual Node get_right_child(Node n) const =0;
 
-    virtual value_type get(Node n) =0;
+    virtual value_type get(Node n) const =0;
     virtual void update(value_type val, Node n) =0;
 
     virtual void remove(Node n) =0;
 
-    virtual bool is_empty() =0;
-    virtual bool left_child_empty(Node n) =0;
-    virtual bool right_child_empty(Node n) =0;
-    virtual bool is_valid(Node n) =0;
-    virtual bool is_leaf(Node n) =0;
+    virtual bool is_empty() const =0;
+    virtual bool left_child_empty(Node n) const =0;
+    virtual bool right_child_empty(Node n) const =0;
+    virtual bool is_valid(Node n) const =0;
+    virtual bool is_leaf(Node n) const =0;
 
     virtual void pre_visit(Node n);
     virtual void in_visit(Node n);
@@ -56,7 +56,6 @@ public:
 
 };
 
-//TODO: review implementation
 template<class T, class N>
 void BinTree<T,N>::pre_visit(Node n) {
 
