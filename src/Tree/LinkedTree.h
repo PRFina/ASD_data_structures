@@ -73,6 +73,10 @@ public:
 
     Node get_next_sibling(const Node n) const override;
 
+    void remove(Node n) override;
+
+    size_t get_size() const override;
+
 
 private:
     Node _root;
@@ -255,6 +259,47 @@ typename LinkedTree<T>::Node LinkedTree<T>::get_next_sibling(const Node n) const
         throw NullNode();
 
 
+}
+
+template<class T>
+void LinkedTree<T>::remove(Node n) {
+    if(!is_leaf(n)){
+
+        Node child = nullptr;
+        bool end = false;
+
+        while(!end){
+            child = get_first_child(n);
+            if(is_last_child(child)) {
+                end = true;
+            }
+            remove(child);
+        }
+    }
+    children_list& children = n->_parent->_children;
+    list_pos pos = children.begin();
+
+
+    while (!children.end(pos)){
+        if (children.get(pos) == n){
+            children.remove(pos);
+            break;
+        }
+
+        pos = children.next(pos);
+    }
+    delete n;
+    _size--;
+
+    if(n == _root)
+        _root = nullptr;
+
+
+}
+
+template<class T>
+size_t LinkedTree<T>::get_size() const {
+    return _size;
 }
 
 

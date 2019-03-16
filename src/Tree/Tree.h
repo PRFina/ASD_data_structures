@@ -21,11 +21,12 @@ public:
     virtual Node get_parent(const Node n) const =0;
     virtual Node get_first_child(const Node n) const =0;
     virtual Node get_next_sibling(const Node n) const =0;
+    virtual size_t get_size() const =0;
 
     virtual value_type get(const Node n) const =0;
     virtual void update(const value_type& val, Node n) =0;
 
-//  virtual void remove(Node n) =0;
+    virtual void remove(Node n) =0;
 
     virtual bool is_empty() const =0;
     virtual bool is_valid(const Node n) const =0;
