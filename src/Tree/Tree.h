@@ -35,13 +35,13 @@ public:
 
 
     virtual void pre_visit(Node n);
-    virtual void in_visit(Node n);
+    //virtual void in_visit(Node n);
     virtual void post_visit(Node n);
     virtual void level_visit(Node n);
-/*
+
     virtual int get_depth(Node n);
     virtual int get_height(Node n);
-*/
+
 
 
 
@@ -131,6 +131,42 @@ void Tree<T, N>::level_visit(Node n) {
         }
         end = false;
     }
+
+}
+
+template<class T, class N>
+int Tree<T, N>::get_depth(Node n) {
+    if(is_valid(n)){
+      int depth = 0;
+      while (n != get_root()){
+          n = get_parent(n);
+          depth++;
+      }
+      return depth;
+    }else
+        throw NullNode();
+}
+
+template<class T, class N>
+int Tree<T, N>::get_height(Node n) {
+    if(is_leaf(n))
+        return 0;
+
+
+    int max_height = 0;
+    bool end = false;
+    Node child = get_first_child(n);
+    while(!end){
+        if(is_last_child(child))
+            end = true;
+
+        int child_height = get_height(child);
+        child = get_next_sibling(child);
+
+        max_height = std::max(max_height,child_height);
+
+    }
+    return max_height + 1;
 
 }
 

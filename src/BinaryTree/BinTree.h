@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include "../Queue/Queue.h"
+#include "../TreeExceptions.h"
+
 /**
  * there a 2 caterogry of methods:
  * 1) Tree methods: works globally on tree
@@ -86,13 +88,17 @@ void BinTree<T,N>::post_visit(Node n) {
 
 template<class T, class N>
 int BinTree<T, N>::get_depth(Node n) {
-    int depth = 0;
-    while( n != get_root()){
-        depth++;
-        n = get_parent(n);
-    }
+    if (is_valid(n)){
+        int depth = 0;
+        while( n != get_root()){
+            depth++;
+            n = get_parent(n);
+        }
 
-    return depth;
+        return depth;
+    } else
+        throw NullNode();
+
 
 }
 
