@@ -43,22 +43,24 @@ public:
 
     typedef typename  Tree<T, KTreeNode<T>*>::value_type value_type;
     typedef typename  Tree<T, KTreeNode<T>*>::Node Node;
+
     LinkedTree();
-
-
     LinkedTree(const value_type& val);
+    LinkedTree(const LinkedTree<T>& tree);
+
     void add_root(const value_type val) override;
 
     void add_first_child(Node node) override;
     void add_first_child(const value_type &val, Node node);
     void add_sibling(Node node) override;
     void add_sibling(const value_type val, Node node);
+    void add_subtree(Node parent, Node child, const LinkedTree<T>& subtree);
 
 
     Node get_root() const override;
     Node get_parent(const Node n) const override;
     Node get_first_child(const Node n) const override;
-
+    Node get_next_sibling(const Node n) const override;
 
     bool is_empty() const override;
     bool is_leaf(const Node n) const override;
@@ -68,13 +70,7 @@ public:
     value_type get(const Node n) const override;
 
     void update(const value_type& val, Node n) override;
-
-
-
-    Node get_next_sibling(const Node n) const override;
-
     void remove(Node n) override;
-
     size_t get_size() const override;
 
 
@@ -83,6 +79,8 @@ private:
     int _size;
     typedef LinkedList<KTreeNode<T>*> children_list;
     typedef typename children_list::position list_pos;
+
+    Node copy(Node from, Node parent, int& count);
 };
 
 template<class T>
@@ -93,6 +91,19 @@ LinkedTree<T>::LinkedTree(const value_type &val) {
     _root = nullptr;
     _size = 0;
     add_root(val);
+}
+
+template<class T>
+LinkedTree<T>::LinkedTree(const LinkedTree<T> &tree) {
+    int node_count = 0;
+    _root = nullptr;
+    _size = 0;
+
+    if(!tree.is_empty()){
+        _root = copy(tree.get_root(), nullptr, node_count);
+        _size = node_count;
+        _root->_parent = _root;
+    }
 }
 
 
@@ -300,6 +311,69 @@ void LinkedTree<T>::remove(Node n) {
 template<class T>
 size_t LinkedTree<T>::get_size() const {
     return _size;
+}
+
+template<class T>
+void LinkedTree<T>::add_subtree(LinkedTree::Node parent, LinkedTree::Node child, const LinkedTree<T> &subtree) {
+    if (!subtree.is_empty()) {
+        int nodes_count = 0;
+        Node subtree_root = copy(subtree.get_root(), nullptr, nodes_count);
+        _size += nodes_count;
+
+        // add as first child
+        if (parent == child) {
+            subtree_root->_parent = parent;
+            parent->_children.pushFront(subtree_root);
+        } else { // add as sibling of parent
+            children_list& children = parent->_parent->_children;
+            list_pos pos = children.begin();
+            bool end = false;
+
+            if (parent == _root)
+                throw NoSiblingAllowed();
+
+            while(!end){ // search parent in children list, then add as sibling
+                if( parent == children.get(pos)){
+                    subtree_root->_parent = parent->_parent;
+                    children.add(subtree_root,pos);
+                    end = true;
+                }
+                pos = children.next(pos);
+            }
+        }
+
+    }
+
+}
+/**
+ * Copy recursively the tree rooted in node from. Since each KTree node contains a parent link, in each call the
+ * parent of the node will be passed as parameter to link child and parent bidirectionally. count param is incremented
+ * by one unit on every node created.
+ * @tparam T
+ * @param from
+ * @param parent
+ * @param count
+ * @return
+ */
+template<class T>
+typename LinkedTree<T>::Node LinkedTree<T>::copy(Node from, Node parent, int &count) {
+    Node new_node = nullptr;
+    new_node = new KTreeNode<T>(from->_data, parent);
+    count++;
+    if(is_leaf(from))
+        return new_node;
+
+    bool end = false;
+    Node child = get_first_child(from);
+    while (!end){
+        if (is_last_child(child))
+            end = true;
+        new_node->_children.pushBack(copy(child, new_node, count));
+        child = get_next_sibling(child);
+    }
+
+
+    return new_node;
 }
 
 
