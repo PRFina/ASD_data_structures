@@ -4,6 +4,7 @@
 //
 
 #include <iostream>
+#include <string>
 #include "List/ArrayList.h"
 #include "List/LinkedList.h"
 #include "Stack/Stack.h"
@@ -11,9 +12,11 @@
 #include "assert.h"
 #include "BinaryTree/ArrayBinTree.h"
 #include "BinaryTree/LinkedBinTree.h"
+#include "Tree/LinkedTree.h"
 
 using std::cout;
 using std::endl;
+using std::string;
 
 void print_title(std::string test_title){
     cout << endl << endl << "******************* " << test_title << " *******************" << endl << endl;
@@ -288,6 +291,7 @@ int test_ArrayBinTree(){
 }
 
 int test_LinkedBinTree(){
+    print_title("TEST BINARY TREE WITH LINKED POINTERS");
     LinkedBinTree<int> T1(1000);
 
     T1.add_left_child(100,T1.get_root());
@@ -330,13 +334,81 @@ int test_LinkedBinTree(){
 
 
 }
+
+int test_LinkedTree(){
+    print_title("TEST K-ARY TREE WITH LINKED POINTERS");
+    LinkedTree<int> t1(1);
+    t1.add_first_child(4, t1.get_root());
+    t1.add_first_child(3, t1.get_root());
+    t1.add_first_child(2, t1.get_root());
+
+    t1.add_first_child(8, t1.get_first_child(t1.get_root()));
+    t1.add_first_child(7, t1.get_first_child(t1.get_root()));
+    t1.add_first_child(6, t1.get_first_child(t1.get_root()));
+    t1.add_first_child(5, t1.get_first_child(t1.get_root()));
+
+    LinkedTree<int>::Node n =  t1.get_next_sibling(t1.get_first_child(t1.get_root())); //(3)
+    t1.add_first_child(9,n);
+    t1.add_sibling(10,t1.get_first_child(n));
+
+    t1.add_first_child(12, t1.get_first_child(t1.get_first_child(t1.get_root())));
+    t1.add_first_child(11, t1.get_first_child(t1.get_first_child(t1.get_root())));
+
+    t1.add_first_child(13,t1.get_next_sibling(t1.get_first_child(t1.get_first_child(t1.get_first_child(t1.get_root())))));
+
+    cout << std::boolalpha << t1.is_last_child(n) << endl; //->false
+    cout << std::boolalpha << t1.is_leaf(n) << endl; //->false
+
+    cout << std::boolalpha << t1.is_last_child(t1.get_next_sibling(n)) << endl; //->true
+    cout << std::boolalpha << t1.is_leaf(t1.get_next_sibling(n)) << endl; //->true
+
+    cout << "Root is last child?:" << std::boolalpha << t1.is_last_child(t1.get_root()) << endl;
+
+    cout << "Tree#1 PRE-VISIT: ";
+    t1.pre_visit(t1.get_root());
+    cout << endl;
+
+    cout << "Tree#1 POST-VISIT: ";
+    t1.post_visit(t1.get_root());
+    cout << endl;
+
+    /*cout << "Tree#1 IN-VISIT (i=1): ";
+    t1.in_visit(t1.get_root());
+    cout << endl;*/
+
+    cout << "Tree#1 BFS-VISIT (i=1): ";
+    t1.level_visit(t1.get_root());
+    cout << endl;
+
+    cout << "Depth of root :" << t1.get_depth(t1.get_root()) << endl;
+    cout << "Depth of 2nd child of root (3):" << t1.get_depth(t1.get_next_sibling(t1.get_first_child(t1.get_root()))) << endl;
+    cout << "Depth of left-most leaf of t1 (11):" << t1.get_depth(t1.get_first_child(t1.get_first_child(t1.get_first_child(t1.get_root())))) << endl;
+
+    cout << "t1 height: " << t1.get_height(t1.get_root());
+
+    t1.remove(n);
+    cout << "t1 size: " << t1.get_size() << endl; // -> 13-3 = 10
+    cout << "t1 is empty?:  " << std::boolalpha << t1.is_empty() << endl; // -> false
+
+    LinkedTree<int> t2(t1);
+
+    t2.add_subtree(t2.get_first_child(t2.get_root()), t2.get_next_sibling(t2.get_first_child(t2.get_root())),t1);
+
+    t1.remove(t1.get_root());
+    cout << "t1 size: " << t1.get_size() << endl; // -> 0
+    cout << "t1 is empty?:  " << std::boolalpha << t1.is_empty() << endl; // -> true
+
+}
+
+
 int main(){
     //test_ArrayList();
     //test_LinkedList();
     //test_Stack();
     //test_Queue();
     //test_ArrayBinTree();
-    test_LinkedBinTree();
+    //test_LinkedBinTree();
+    test_LinkedTree();
 
 
 
