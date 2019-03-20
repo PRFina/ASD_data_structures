@@ -38,6 +38,8 @@ private:
 };
 
 /**
+ * This implementation models a Directed Weighted Graph. For non oriented graph some methods
+ * (add_edge, degree, remove_edge) should be modified accordingly to the semantics or non orientedness
  * adj(v) = {v1,v2,...,vk} // adjacents of v
  * @tparam L node label
  * @tparam W  edge weight
@@ -74,6 +76,10 @@ public:
     NodeList nodes() const override;
 
     NodeList adjacents_nodes(const Node &n) const override;
+
+    size_t in_degree(const Node &node) const override;
+
+    size_t out_degree(const Node &node) const override;
 
 
 private:
@@ -143,7 +149,9 @@ bool ListGraph<L, W>::node_exists(const Node& node) const {
 
 template<class L, class W>
 bool ListGraph<L, W>::isUsed(const Node& node) const {
-    return (!_data[node._id]._free);
+    if (node_exists(node))
+        return (!_data[node._id]._free);
+    return false;
 }
 
 template<class L, class W>
@@ -238,6 +246,49 @@ typename ListGraph<L,W>::NodeList ListGraph<L, W>::adjacents_nodes(const Node& n
         throw "Invalid node";
 
 
+}
+/**
+ * time: O(|V|*sum(0,|V|,adj(v_i))) = O(|V||E|)
+ * @tparam L
+ * @tparam W
+ * @param node
+ * @return
+ */
+template<class L, class W>
+size_t ListGraph<L, W>::in_degree(const Node& node) const {
+    size_t  in_degree = 0;
+    if(node_exists(node) && isUsed(node)){
+
+        for(int i=0; i < _size; i++){ //loop trough all nodes
+            if(isUsed(_data[i])) {
+                NodeList adj_list = adjacents_nodes(_data[i]);
+                NodeListPos pos = adj_list.begin();
+
+                while (!adj_list.end(pos)){ // loop trough adjacents nodes
+                    if(adj_list.get(pos)->_id == node._id)
+                        in_degree++;
+                    pos = adj_list.next(pos);
+                }
+            }
+        }
+    }
+
+    return in_degree;
+}
+
+/**
+ * time: O(1) due to size operator in edge list, O(adj(node)) otherwise
+ * @tparam L
+ * @tparam W
+ * @param node
+ * @return
+ */
+template<class L, class W>
+size_t ListGraph<L, W>::out_degree(const Node& node) const {
+    if(node_exists(node) && isUsed(node))
+        return _data[node._id]._edges.size();
+    else
+        throw "Invalid node";
 }
 
 #endif //STRUTTURE_ASD_LISTGRAPH_H
