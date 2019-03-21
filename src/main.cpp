@@ -13,7 +13,7 @@
 #include "BinaryTree/ArrayBinTree.h"
 #include "BinaryTree/LinkedBinTree.h"
 #include "Tree/LinkedTree.h"
-
+#include "Graph/ListGraph.h"
 using std::cout;
 using std::endl;
 using std::string;
@@ -400,6 +400,103 @@ int test_LinkedTree(){
 
 }
 
+int test_ListGraph(){
+
+    print_title("TEST GRAPH WITH ADJACENCY LIST");
+    ListGraph<char,int> g1;
+    ListGraph<char,int>::Node n0('0'), n1('1'), n2('2'), n3('X'), n4('N');
+
+
+    g1.add_node(n0);
+    g1.add_node(n1);
+    g1.add_node(n2);
+    g1.add_node(n3);
+
+    g1.add_edge(n0,n1,3);
+    g1.add_edge(n0,n2,2);
+    g1.add_edge(n1,n2,2);
+    g1.add_edge(n3,n2,7);
+
+    cout << g1.get_label(n0) << " --" << g1.get_weight(n0,n1) << "--> " << g1.get_label(n1) << endl;
+    cout << g1.get_label(n0) << " --" << g1.get_weight(n0,n2) << "--> " << g1.get_label(n2) << endl;
+    cout << g1.get_label(n1) << " --" << g1.get_weight(n1,n2) << "--> " << g1.get_label(n2) << endl;
+    cout << g1.get_label(n3) << " --" << g1.get_weight(n3,n2) << "--> " << g1.get_label(n2) << endl;
+
+    g1.remove_node(n3);
+    g1.add_node(n4);
+    g1.add_edge(n4,n1,6);
+    g1.add_edge(n1,n4,9);
+
+    g1.remove_edge(n4,n1);
+    g1.remove_edge(n1,n4);
+
+    cout << endl;
+
+    cout << "Nodes of g1: ";
+    ListGraph<char,int>::NodeList nodes = g1.nodes();
+    ListGraph<char,int>::NodeListPos pos = nodes.begin();
+
+    while (!nodes.end(pos)){
+        cout << g1.get_label(*nodes.get(pos)) << ", " ;
+        pos = nodes.next(pos);
+    }
+    cout << endl;
+
+    cout << "Adjacents of n0: ";
+    ListGraph<char,int>::NodeList adjacents = g1.adjacents_nodes(n0);
+    ListGraph<char,int>::NodeListPos adjpos = nodes.begin();
+
+    while (!adjacents.end(adjpos)){
+        cout << g1.get_label(*adjacents.get(adjpos)) << ", " ;
+        adjpos = adjacents.next(adjpos);
+    }
+    cout << endl;
+
+    cout << "in-degree of n2: " << g1.in_degree(n2) << endl; //-> 2
+    cout << "out-degree of n2: " << g1.out_degree(n2) << endl; //-> 0
+
+    cout << "in-degree of n0: " << g1.in_degree(n0) << endl; //->0
+    cout << "out-degree of n0: " << g1.out_degree(n0) << endl; //->2
+
+}
+
+int test_ListGraph_visits(){
+    ListGraph<char,int> G;
+    ListGraph<char,int>::Node n0('0'), n1('1'), n2('2'), n3('3'), n4('4');
+
+    G.add_node(n0);
+    G.add_node(n1);
+    G.add_node(n2);
+    G.add_node(n3);
+    G.add_node(n4);
+
+    G.add_edge(n0,n2,1);
+    G.add_edge(n0,n1,1);
+    G.add_edge(n1,n2,1);
+    G.add_edge(n1,n3,1);
+    G.add_edge(n3,n1,1);
+    G.add_edge(n2,n4,1);
+    G.add_edge(n4,n0,1);
+
+    cout << "BFS starting from n0: " << endl;
+    G.BFS_visit(n0);
+    cout << endl;
+
+    cout << "BFS starting from n1: " << endl;
+    G.BFS_visit(n1);
+    cout << endl;
+
+    cout << "BFS starting from n2: " << endl;
+    G.BFS_visit(n2);
+    cout << endl;
+
+    cout << "DFS starting from n0: " << endl;
+    G.DFS_visit(n0);
+    cout << endl;
+
+
+
+}
 
 int main(){
     //test_ArrayList();
@@ -408,8 +505,9 @@ int main(){
     //test_Queue();
     //test_ArrayBinTree();
     //test_LinkedBinTree();
-    test_LinkedTree();
-
+    //test_LinkedTree();
+    //test_ListGraph();
+    test_ListGraph_visits();
 
 
 

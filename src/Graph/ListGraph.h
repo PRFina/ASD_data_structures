@@ -7,6 +7,8 @@
 
 #include "../List/LinkedList.h"
 #include "Graph.h"
+#include "../Queue/Queue.h"
+#include "../Stack/Stack.h"
 
 template <class L, class W>
 class ListGraph;
@@ -14,7 +16,7 @@ class ListGraph;
 template <class W, class N>
 struct GraphEdge{
     N _to;
-    W weight;
+    W _weight;
 };
 
 
@@ -22,19 +24,20 @@ template <class L, class W>
 class GraphNode{
 public:
     friend ListGraph<L,W>;
+    static const int NIL = -1;
 
     typedef GraphEdge<W,int> Edge;
     typedef LinkedList<Edge> edgeList;
     typedef typename LinkedList<Edge>::position edgeListPos;
-    GraphNode(): _id(-1), _free(true) {}
-    GraphNode(const L& label): _label(label), _id(-1), _free(true) {}
+    GraphNode(): _id(NIL), _free(true), _visited(false) {}
+    GraphNode(const L& label): _label(label), _id(NIL), _free(true), _visited(false) {}
+
 private:
-
-
     int _id;
     bool _free;
     L _label;
     LinkedList<Edge> _edges;
+    bool _visited;
 };
 
 /**
@@ -48,7 +51,7 @@ private:
 template <class L, class W>
 class ListGraph: public Graph<L,W,GraphNode<L,W>> {
 public:
-    typedef Graph<L,W,GraphNode<L,W>> _Graph; //shortcut to avoid complex syntax
+    typedef Graph<L,W,GraphNode<L,W>> _Graph; // shortcut to avoid complex syntax
     typedef typename  _Graph::Label Label;
     typedef typename  _Graph::Weight Weight;
     typedef typename  _Graph::Node Node;
@@ -65,6 +68,9 @@ public:
     void add_edge(const Node& from,const Node& to,const Weight& w) override;
     bool node_exists(const Node& node) const override;
 
+    void update_label(Node n, const Label& l) override;
+    void update_weight(Node& from, Node& to, const Weight& w) override;
+
     size_t nodes_count() const override;
     size_t edges_count() const override;
 
@@ -74,12 +80,17 @@ public:
     Weight get_weight(const Node& from, const Node& to) const override;
 
     NodeList nodes() const override;
-
     NodeList adjacents_nodes(const Node &n) const override;
 
     size_t in_degree(const Node &node) const override;
-
     size_t out_degree(const Node &node) const override;
+
+    void remove_node(Node& n) override;
+    void remove_edge(const Node &from, const Node &to) override;
+
+    void DFS_visit(const Node &start_node) const override;
+
+    void BFS_visit(const Node &start_node) const override;
 
 
 private:
@@ -101,20 +112,30 @@ ListGraph<L, W>::ListGraph(int expected_size) {
     _data = new Node[_size];
 }
 
-
+/**
+ * Node must be unique
+ * time: worst case O(|V|) because search linearly in the nodes array
+ * @tparam L
+ * @tparam W
+ * @param node
+ */
 template<class L, class W>
 void ListGraph<L, W>::add_node(Node& node) {
     if(_nodes_count < _size){
-        int n = 0;
+        if( node._id == Node::NIL) {
 
-        while(!_data[n]._free) // search next free element
-            n++;
+            int n = 0;
+            while(isUsed(_data[n])) // search next free element
+                n++;
 
-        _data[n]._free = false; // mark as used
-        _data[n]._id = n; // mark as used
-        _data[n]._label = node._label;
-        node._id = n; // add new id
-        _nodes_count++;
+            _data[n]._free = false; // mark as used
+            _data[n]._id = n; // mark as used
+            _data[n]._label = node._label;
+
+            node._id = n; // add new id
+            _nodes_count++;
+        } else
+            throw "Node isn't a new node";
     } else
         throw "Graph is full!";
 }
@@ -132,7 +153,7 @@ template<class L, class W>
 void ListGraph<L, W>::add_edge(const Node& from,const Node& to,const Weight& w) {
     if (node_exists(from) && node_exists(to) && isUsed(from) && isUsed(to)){ //check if nodes are nodes of this graph
         Edge new_edge;
-        new_edge.weight = w;
+        new_edge._weight = w;
         new_edge._to = to._id;
 
         _data[from._id]._edges.pushBack(new_edge); // add to the adjacency list
@@ -144,7 +165,7 @@ void ListGraph<L, W>::add_edge(const Node& from,const Node& to,const Weight& w) 
 
 template<class L, class W>
 bool ListGraph<L, W>::node_exists(const Node& node) const {
-    return (node._id != -1);
+    return (node._id != Node::NIL);
 }
 
 template<class L, class W>
@@ -174,6 +195,8 @@ typename ListGraph<L,W>::Label ListGraph<L, W>::get_label(const Node& node) cons
     if (node_exists(node) && isUsed(node))
         return _data[node._id]._label;
 }
+
+
 /**
  * time: O(adj(from))
  * @tparam L
@@ -190,7 +213,7 @@ typename ListGraph<L,W>::Weight ListGraph<L, W>::get_weight(const Node& from, co
 
         while (!edges.end(pos)){
             if (edges.get(pos)._to == to._id)
-                return edges.get(pos).weight;
+                return edges.get(pos)._weight;
             pos = edges.next(pos);
         }
 
@@ -200,6 +223,43 @@ typename ListGraph<L,W>::Weight ListGraph<L, W>::get_weight(const Node& from, co
 
 
 }
+
+
+template<class L, class W>
+void ListGraph<L, W>::update_label(Node node, const Label& label) {
+    if (node_exists(node) && isUsed(node))
+        _data[node._id]._label = label;
+}
+
+/**
+ * time: O(adj(from))
+ * @tparam L
+ * @tparam W
+ * @param from
+ * @param to
+ * @param w
+ */
+
+template<class L, class W>
+void ListGraph<L, W>::update_weight(Node& from, Node& to, const Weight& w) {
+    if (node_exists(from) && isUsed(from) && node_exists(to) && isUsed(to)){
+        typename Node::edgeList& edges = _data[from._id]._edges;
+        typename Node::edgeListPos pos = edges.begin();
+
+        while(!edges.end(pos)){
+            if(edges.get(pos)._to == to._id){
+
+                Edge e = edges.get(pos);
+                e._weight = w;
+                edges.update(e, pos);
+                return;
+            }
+        }
+
+        throw "invalid edge!";
+    }
+}
+
 /**
  * time: O(|V|) due to new list creation
  * @tparam L
@@ -290,5 +350,108 @@ size_t ListGraph<L, W>::out_degree(const Node& node) const {
     else
         throw "Invalid node";
 }
+
+template<class L, class W>
+void ListGraph<L, W>::remove_node(Node& node) {
+    if (node_exists(node) && isUsed(node)){
+        if(node._edges.is_empty()){
+            _data[node._id]._free = true; //mark as deleted
+            _data[node._id]._id = Node::NIL; //invalidate the node
+            _data[node._id]._edges.clear(); //remove all elements from adjacency list
+
+            node._id = Node::NIL; // set node with invalid id
+        } else {
+            //TODO: loop trough al nodes adjacency list and find n and then delete the edge
+            throw "Not an isolated node";
+        }
+
+    }
+
+}
+
+template<class L, class W>
+void ListGraph<L, W>::remove_edge(const Node& from, const Node& to) {
+    if (node_exists(from) && isUsed(from) && node_exists(to) && isUsed(to)){
+        typename Node::edgeList& edges = _data[from._id]._edges;
+        typename Node::edgeListPos pos = edges.begin();
+
+        bool found = false;
+        while(!edges.end(pos) && !found){
+            if(edges.get(pos)._to == to._id){
+                found = true;
+                edges.remove(pos);
+            }
+            pos = edges.next(pos);
+        }
+    }
+
+}
+
+template<class L, class W>
+void ListGraph<L, W>::DFS_visit(const Node& start_node) const {
+    Stack<Node> stack;
+    _data[start_node._id]._visited = true;
+    stack.push(_data[start_node._id]);
+
+    while (!stack.is_empty()) {
+        Node current = stack.top();
+        std::cout << current._label << ", ";
+        stack.pop();
+
+        NodeList neighbors = adjacents_nodes(current);
+        NodeListPos pos = neighbors.begin();
+
+        while (!neighbors.end(pos)) {
+            if (!neighbors.get(pos)->_visited) {
+                neighbors.get(pos)->_visited = true;
+                stack.push(*neighbors.get(pos));
+            }
+            pos = neighbors.next(pos);
+        }
+
+    }
+
+    NodeList nodes = this->nodes();
+    NodeListPos pos = nodes.begin();
+
+    while (!nodes.end(pos)) {
+        nodes.get(pos)->_visited = false;
+        pos = nodes.next(pos);
+    }
+}
+
+template<class L, class W>
+void ListGraph<L, W>::BFS_visit(const Node& start_node) const {
+    Queue<Node> queue;
+    _data[start_node._id]._visited = true;
+    queue.push(_data[start_node._id]);
+
+    while (!queue.is_empty()) {
+        Node current = queue.front();
+        std::cout << current._label << ", ";
+        queue.pop();
+
+        NodeList neighbors = adjacents_nodes(current);
+        NodeListPos pos = neighbors.begin();
+
+        while (!neighbors.end(pos)) {
+            if (!neighbors.get(pos)->_visited) {
+                neighbors.get(pos)->_visited = true;
+                queue.push(*neighbors.get(pos));
+            }
+            pos = neighbors.next(pos);
+        }
+
+    }
+
+    NodeList nodes = this->nodes();
+    NodeListPos pos = nodes.begin();
+
+    while (!nodes.end(pos)) {
+        nodes.get(pos)->_visited = false;
+        pos = nodes.next(pos);
+    }
+}
+
 
 #endif //STRUTTURE_ASD_LISTGRAPH_H
