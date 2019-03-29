@@ -47,6 +47,7 @@ public:
     LinkedTree();
     LinkedTree(const value_type& val);
     LinkedTree(const LinkedTree<T>& tree);
+    virtual ~LinkedTree();
 
     void add_root(const value_type val) override;
 
@@ -104,6 +105,12 @@ LinkedTree<T>::LinkedTree(const LinkedTree<T> &tree) {
         _size = node_count;
         _root->_parent = _root;
     }
+}
+
+template<class T>
+LinkedTree<T>::~LinkedTree() {
+    if(is_valid(_root))
+        remove(_root);
 }
 
 
@@ -287,10 +294,10 @@ void LinkedTree<T>::remove(Node n) {
             remove(child);
         }
     }
+
     children_list& children = n->_parent->_children;
     list_pos pos = children.begin();
-
-
+    // search leaf into parent children list and remove
     while (!children.end(pos)){
         if (children.get(pos) == n){
             children.remove(pos);
