@@ -14,6 +14,8 @@
 #include "BinaryTree/LinkedBinTree.h"
 #include "Tree/LinkedTree.h"
 #include "Graph/ListGraph.h"
+#include "PriorityQueue/Heap.h"
+
 using std::cout;
 using std::endl;
 using std::string;
@@ -394,6 +396,7 @@ int test_LinkedTree(){
 
     t2.add_subtree(t2.get_first_child(t2.get_root()), t2.get_next_sibling(t2.get_first_child(t2.get_root())),t1);
 
+    t1.~LinkedTree();
     t1.remove(t1.get_root());
     cout << "t1 size: " << t1.get_size() << endl; // -> 0
     cout << "t1 is empty?:  " << std::boolalpha << t1.is_empty() << endl; // -> true
@@ -498,6 +501,24 @@ int test_ListGraph_visits(){
 
 }
 
+int test_PriorityQueue(){
+    Heap<int> h1;
+    h1.insert(4);
+    h1.insert(1);
+    h1.insert(6);
+    h1.insert(3);
+
+    h1.remove_min();
+    h1.remove_min();
+    h1.insert(-5);
+    h1.insert(2);
+    h1.remove_min();
+    h1.remove_min();
+    h1.remove_min();
+    h1.remove_min();
+
+    return 0;
+}
 int main(){
     //test_ArrayList();
     //test_LinkedList();
@@ -505,9 +526,11 @@ int main(){
     //test_Queue();
     //test_ArrayBinTree();
     //test_LinkedBinTree();
-    //test_LinkedTree();
+    test_LinkedTree();
     //test_ListGraph();
-    test_ListGraph_visits();
+    //test_ListGraph_visits();
+    //test_PriorityQueue();
+
 
 
 
