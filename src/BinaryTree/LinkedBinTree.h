@@ -14,12 +14,13 @@ class LinkedBinTree;
 
 template <class T>
 class TreeNode{
-
+    friend LinkedBinTree<T>;
     TreeNode():_parent(nullptr), _left(nullptr), _right(nullptr){};
-    TreeNode(const T& val): _data(val), _parent(nullptr), _left(nullptr), _right(nullptr){};
+
+    explicit TreeNode(const T& val): _data(val), _parent(nullptr), _left(nullptr), _right(nullptr){};
     TreeNode(const T& val, TreeNode<T>* parent, TreeNode<T>* left,TreeNode<T>* right):
             _data(val), _parent(parent), _left(left), _right(right){};
-    friend LinkedBinTree<T>;
+
 private:
     T _data;
     TreeNode<T>* _parent;
@@ -71,7 +72,12 @@ public:
 
 
 private:
-    int _size; // number of nodes
+    size_t _size;
+public:
+    size_t get_size() const override;
+
+private:
+    // number of nodes
     Node _root;
     Node copy(Node from, Node parent, size_t& count);
 
@@ -322,6 +328,11 @@ LinkedBinTree<T> LinkedBinTree<T>::extract_subtree(LinkedBinTree::Node root) {
     new_tree._size = size;
 
     return new_tree;
+}
+
+template<class T>
+size_t LinkedBinTree<T>::get_size() const {
+    return _size;
 }
 
 #endif //STRUTTURE_ASD_LINKEDBINTREE_H

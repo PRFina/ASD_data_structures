@@ -47,6 +47,7 @@ public:
     virtual bool right_child_empty(Node n) const =0;
     virtual bool is_valid(Node n) const =0;
     virtual bool is_leaf(Node n) const =0;
+    virtual size_t get_size() const =0;
 
     virtual void pre_visit(Node n);
     virtual void in_visit(Node n);

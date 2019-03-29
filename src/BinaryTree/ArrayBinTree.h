@@ -49,6 +49,8 @@ public:
 
     bool is_leaf(Node n) const  override;
 
+    size_t get_size() const override;
+
 private:
     struct _Cell {
         Node parent;
@@ -310,6 +312,11 @@ void ArrayBinTree<T>::remove(Node n) {
     }
     else
         throw std::domain_error("Null node");
+}
+
+template<class T>
+size_t ArrayBinTree<T>::get_size() const {
+    return _size;
 }
 
 template<class T>
