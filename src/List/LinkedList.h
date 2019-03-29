@@ -33,7 +33,7 @@ private:
 /*******************************************************************
 LINKED LIST
 *******************************************************************/
-// TODO: assignment and equality operators;
+// TODO: comment code, add complexity info
 template<class T>
 class LinkedList: public List<T, Node<T>*> {
 public:
@@ -45,7 +45,6 @@ public:
     LinkedList(const LinkedList<T>& list);
     ~LinkedList();
 
-    void create() override;
     bool is_empty() const override;
 
     unsigned int size() const override;
@@ -109,11 +108,6 @@ LinkedList<T>::LinkedList(const LinkedList<T> &list) {
         pushBack(list.get(pos));
         pos = list.next(pos);
     }
-}
-
-template<class T>
-void LinkedList<T>::create() {
-
 }
 
 template<class T>
