@@ -19,6 +19,7 @@ struct GraphEdge{
     W _weight;
 };
 
+// TODO: replace throw string with trow exceptions
 
 template <class L, class W>
 class GraphNode{
@@ -60,7 +61,7 @@ public:
     typedef typename _Graph::NodeList NodeList;
     typedef typename _Graph::NodeListPos NodeListPos;
 
-    ListGraph(int expected_size=50);
+    ListGraph(size_t expected_size=50);
 
 
     void add_node(Node &n) override;
@@ -92,12 +93,14 @@ public:
 
     void BFS_visit(const Node &start_node) const override;
 
+    virtual ~ListGraph();
+
 
 private:
     Node* _data; //array of nodes;
-    int _size;
-    int _nodes_count;
-    int _edges_count;
+    size_t _size;
+    size_t _nodes_count;
+    size_t _edges_count;
 
     bool isUsed(const Node& node) const;
 };
@@ -105,7 +108,7 @@ private:
 
 
 template<class L, class W>
-ListGraph<L, W>::ListGraph(int expected_size) {
+ListGraph<L, W>::ListGraph(size_t expected_size) {
     _size = expected_size;
     _nodes_count = 0;
     _edges_count = 0;
@@ -451,6 +454,14 @@ void ListGraph<L, W>::BFS_visit(const Node& start_node) const {
         nodes.get(pos)->_visited = false;
         pos = nodes.next(pos);
     }
+}
+
+template<class L, class W>
+ListGraph<L, W>::~ListGraph() {
+    delete[] _data;
+    _size = 0;
+    _nodes_count = 0;
+    _edges_count = 0;
 }
 
 
