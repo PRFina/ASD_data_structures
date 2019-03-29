@@ -20,7 +20,7 @@ public:
     ArrayList(unsigned int size);
     ArrayList(value_type val, unsigned int length);
     ArrayList(const ArrayList<T>& list);
-    void create() override;
+
     ~ArrayList();
 
     // Accessors
@@ -57,12 +57,13 @@ private:
 
 template<class T>
 ArrayList<T>::ArrayList(): _size(25) {
-    this->create();
+    _elements = new value_type[_size];
+    _length = 0;
 }
 
 template<class T>
 ArrayList<T>::ArrayList(value_type val, unsigned int length): _size(length*2) {
-    this->create();
+    _elements = new value_type[_size];
     _length = length;
 
     for (int i=0; i < _length; i++)
@@ -71,7 +72,8 @@ ArrayList<T>::ArrayList(value_type val, unsigned int length): _size(length*2) {
 
 template<class T>
 ArrayList<T>::ArrayList(unsigned int size): _size(size) {
-    this->create();
+    _elements = new value_type[_size];
+    _length = 0;
 }
 
 template<class T>
@@ -83,12 +85,6 @@ ArrayList<T>::ArrayList(const ArrayList<T>& list) {
     for(int i=0; i < list._size; i++){
         _elements[i] = list._elements[i];
     }
-}
-
-template<class T>
-void ArrayList<T>::create() {
-    _elements = new value_type[_size];
-    _length = 0;
 }
 
 template<class T>
@@ -173,6 +169,7 @@ int ArrayList<T>::previous(position pos) const {
 
 template<class T>
 void ArrayList<T>::remove(position pos) {
+    // TODO: apply resizing strategy as explained in Demetrescu_Camil__Finocchi_Irene__Italiano_Giuseppe_-_Algoritmi_e_Strutture_Dati ch 3 pag 63
     if(is_empty())
         return; //remove on empty list have no effect
     if( in_range(pos)){
