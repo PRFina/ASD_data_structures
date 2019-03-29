@@ -32,7 +32,7 @@ private:
 template <class T>
 class LinkedBinTree: public BinTree<T, TreeNode<T>*> {
 public:
-    //TODO: add copy constructor, assignment and equality operators
+    //TODO: assignment and equality operators
     typedef typename BinTree<T, TreeNode<T>*>::value_type value_type;
     typedef typename BinTree<T, TreeNode<T>*>::Node Node;
 
@@ -67,11 +67,13 @@ public:
     bool is_valid(Node n) const override;
     bool is_leaf(Node n) const;
 
+    virtual ~LinkedBinTree();
+
 
 private:
     int _size; // number of nodes
     Node _root;
-    Node copy(Node from, Node parent,size_t& count);
+    Node copy(Node from, Node parent, size_t& count);
 
 
 
@@ -97,6 +99,13 @@ LinkedBinTree<T>::LinkedBinTree(const LinkedBinTree<T> &tree) {
         _root = copy(tree.get_root(), nullptr, count);
         _size = count;
     }
+
+}
+
+template<class T>
+LinkedBinTree<T>::~LinkedBinTree() {
+    if(is_valid(_root))
+        remove(_root);
 
 }
 
