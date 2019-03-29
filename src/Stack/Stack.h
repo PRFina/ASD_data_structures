@@ -14,6 +14,9 @@ class Stack;
 
 template <class T>
 std::ostream &operator<< (std::ostream &os, const Stack<T> &stack);
+
+// TODO: comment code, add complexity info
+
 template <class T>
 class Stack {
 public:

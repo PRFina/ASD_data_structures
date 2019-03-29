@@ -19,7 +19,7 @@ struct GraphEdge{
     W _weight;
 };
 
-// TODO: replace throw string with trow exceptions
+// TODO: replace throw string with trow exceptions, add comment and complexity info
 
 template <class L, class W>
 class GraphNode{
@@ -64,7 +64,7 @@ public:
     ListGraph(size_t expected_size=50);
 
 
-    void add_node(Node &n) override;
+    void add_node(Node &node) override;
 
     void add_edge(const Node& from,const Node& to,const Weight& w) override;
     bool node_exists(const Node& node) const override;

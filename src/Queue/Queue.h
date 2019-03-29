@@ -14,6 +14,7 @@ class Queue;
 template <class T>
 std::ostream &operator<< (std::ostream &os, const Queue<T> &queue);
 
+// TODO: comment code, add complexity info
 
 template <class T>
 class Queue {
@@ -51,16 +52,19 @@ void Queue<T>::push(const value_type &value) {
 
 template<class T>
 void Queue<T>::pop() {
+    //TODO add if empty check
     _list.popBack();
 }
 
 template<class T>
 typename Queue<T>::value_type Queue<T>::front() {
+    //TODO add if empty check
     return _list.get(_list.last());
 }
 
 template<class T>
 typename Queue<T>::value_type Queue<T>::back() {
+    //TODO add if empty check
     return _list.get(_list.begin());
 }
 
